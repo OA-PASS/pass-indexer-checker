@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.dataconservancy.pass</groupId>
+    <artifactId>pass-indexer-checker</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>PASS indexer Checker</name>
+    <description>Utility for verifying the health of the PASS Repository Indexer</description>
+    <url>https://github.com/OA-PASS/pass-indexer-checker</url>
+
+    <modules>
+        <module>pass-indexer-checker-app</module>
+        <module>pass-indexer-checker-integration</module>
+    </modules>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jim Martino</name>
+            <email>jrm@jhu.edu</email>
+            <organization>The Sheridan Libraries, Johns Hopkins University</organization>
+            <organizationUrl>https://www.library.jhu.edu/</organizationUrl>
+        </developer>
+    </developers>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <pass.client.version>0.8.0</pass.client.version>
+        <pass.client.api.version>0.8.0</pass.client.api.version>
+        <pass.model.version>0.8.0</pass.model.version>
+        <slf4j.api.version>1.7.36</slf4j.api.version>
+        <logback.version>1.2.7</logback.version>
+        <javaee.api.version>8.0.1</javaee.api.version>
+        <junit.version>4.13</junit.version>
+        <greenmail.version>1.5.13</greenmail.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>external</id>
+            <activation>
+                <property>
+                    <name>external</name>
+                </property>
+            </activation>
+            <properties>
+                <scp.port>122</scp.port>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.dataconservancy.pass</groupId>
+                <artifactId>pass-data-client</artifactId>
+                <version>${pass.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dataconservancy.pass</groupId>
+                <artifactId>pass-model</artifactId>
+                <version>${pass.model.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dataconservancy.pass</groupId>
+                <artifactId>pass-client-api</artifactId>
+                <version>${pass.client.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>args4j</groupId>
+                <artifactId>args4j</artifactId>
+                <version>2.33</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${javaee.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.icegreen</groupId>
+                <artifactId>greenmail</artifactId>
+                <version>${greenmail.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
