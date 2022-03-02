@@ -40,6 +40,7 @@
         <pass.client.version>0.8.0</pass.client.version>
         <pass.client.api.version>0.8.0</pass.client.api.version>
         <pass.model.version>0.8.0</pass.model.version>
+        <args4j.version>2.33</args4j.version>
         <slf4j.api.version>1.7.36</slf4j.api.version>
         <logback.version>1.2.7</logback.version>
         <javaee.api.version>8.0.1</javaee.api.version>
@@ -81,7 +82,7 @@
             <dependency>
                 <groupId>args4j</groupId>
                 <artifactId>args4j</artifactId>
-                <version>2.33</version>
+                <version>${args4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

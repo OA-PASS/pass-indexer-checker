@@ -9,22 +9,22 @@ The configuration files needed are the `mail.properties` and `system.properties`
 ###Mail server properties file (mail.properties)
 The use of the mail server is enabled by supplying the command line option -e. This configuration file contains values for parameters needed to send mail out from the application. These values suggest using a gmail server for example.
 
-`mail.transport.protocol=SMTPS`
-`mail.smtp.starttls.enable=true`
-`mail.smtp.host=smtp.gmail.com`
-`mail.smtp.port=587`
-`mail.smtp.auth=true`
-`mail.smtp.user=`
-`mail.smtp.password=`
-`mail.from=`
+`mail.transport.protocol=SMTPS`\
+`mail.smtp.starttls.enable=true`\
+`mail.smtp.host=smtp.gmail.com`\
+`mail.smtp.port=587`\
+`mail.smtp.auth=true`\
+`mail.smtp.user=`\
+`mail.smtp.password=`\
+`mail.from=`\
 `mail.to=`
 
 ###Fedora and Elasticsearch configuration (system.properties)
 This file contains parameters which must be set as system properties so that the java PASS client can configure itself to attach to its storage and its search endpoint - in our case, a Fedora instance and an Elasticsearch instance. The base URL must contain the port number and path to the base container (for example, http://localhost:8080/fcrepo/rest/)
 
-`pass.fedora.user=`
-`pass.fedora.password=`
-`pass.fedora.baseurl=`
-`pass.elasticsearch.url=`
+`pass.fedora.user=`\
+`pass.fedora.password=`\
+`pass.fedora.baseurl=`\
+`pass.elasticsearch.url=`\
 `pass.elasticsearch.limit=`
 
