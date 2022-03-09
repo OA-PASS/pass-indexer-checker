@@ -28,7 +28,7 @@
             </pattern>
         </encoder>
     </appender>
-    <root level="ERROR">
+    <root level="INFO">
         <appender-ref ref="FILE"/>
     </root>
     <logger name="org.dataconservancy.pass" additivity="false">

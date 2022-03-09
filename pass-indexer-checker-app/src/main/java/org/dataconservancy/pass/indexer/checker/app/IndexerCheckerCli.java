@@ -56,7 +56,6 @@ public class IndexerCheckerCli {
 
         final IndexerCheckerCli application = new IndexerCheckerCli();
         CmdLineParser parser = new CmdLineParser(application);
-        String dataFileName = "";
 
         try {
             parser.parseArgument(args);

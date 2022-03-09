@@ -18,15 +18,14 @@
  */
 package org.dataconservancy.pass.indexer.checker.app;
 
-import org.apache.http.HttpHost;
 import org.dataconservancy.pass.client.PassClient;
 import org.dataconservancy.pass.client.PassClientFactory;
 import org.dataconservancy.pass.model.User;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +35,8 @@ import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.json.*;
 
 import static java.lang.String.format;
 import static org.junit.Assert.*;
@@ -101,11 +102,20 @@ public class IndexerCheckerApp {
     }
 
 
-    private void runCheck() {
+    private void runCheck() throws PassCliException {
+        try {
+            runConfigCheck();
+            LOG.info("indexer configuration passed");
+        } catch (IOException e) {
+            LOG.error("Error running configuration check" , e);
+            throw new PassCliException("Error running configuration check" , e);
+        }
+
+
         PassClient passClient = PassClientFactory.getPassClient();
 
         //check that there are at least ten users with Role = SUBMITTER
-        //this is to test for a non-empty index
+        //this is basically a test for a non-empty index
         Set<URI> submitters = passClient.findAllByAttribute(User.class, "roles", User.Role.SUBMITTER);
         assertTrue(submitters.size() >=10);
 
@@ -119,9 +129,19 @@ public class IndexerCheckerApp {
 
         //this user should not be in the index
         URI emptyUri = passClient.findByAttribute(User.class, "locatorIds", businessId);
+        //but if it is, it is due to a previous failed run, so let's fix that
+        if (emptyUri != null ) {
+            passClient.deleteResource( emptyUri );
+
+            // ... and wait for it to disappear from the index
+            attempt(RETRIES, () -> { // check the record does not exist before continuing
+                        final URI uri = passClient.findByAttribute(User.class, "locatorIds", businessId);
+            assertNull(emptyUri);
+            });
+        }
         assertNull(emptyUri);
 
-        //create the user ...
+        //now create the user ...
         final URI returnedUri = passClient.createResource(testUser);
         assertNotNull( returnedUri );
 
@@ -141,6 +161,34 @@ public class IndexerCheckerApp {
             assertNull(uri);
         });
 
+    }
+
+    private void runConfigCheck() throws IOException {
+        URL url = new URL(System.getProperty("pass.elasticsearch.url")+"/pass");
+        LOG.info("Checking index configuration at "  + url);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+
+        BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(urlConnection.getInputStream(), Charset.forName("UTF-8")));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while ((inputLine = bufferedReader.readLine()) != null) {
+            content.append(inputLine);
+        }
+        bufferedReader.close();
+        urlConnection.disconnect();
+
+        String jsonString = content.toString();
+
+        JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
+        JsonObject passJsonObject = jsonReader.readObject();
+        JsonObject properties = passJsonObject.getJsonObject("pass")
+                .getJsonObject("mappings")
+                        .getJsonObject("_doc")
+                                .getJsonObject("properties");
+        assertTrue(properties.entrySet().size() > 10); //should be 80 or more
     }
 
     /**
