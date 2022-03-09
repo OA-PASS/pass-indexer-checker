@@ -23,9 +23,14 @@ import org.dataconservancy.pass.client.PassClientFactory;
 import org.dataconservancy.pass.model.User;
 
 import java.io.*;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
