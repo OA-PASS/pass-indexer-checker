@@ -27,18 +27,18 @@ import org.dataconservancy.pass.model.User;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
 
-/**
- *  Setup method to populate the index with ten users - necessary to match the non-empty test needed for production
- */
-public class IndexerCheckerIT {
-    static IndexerCheckerApp app = new IndexerCheckerApp(false);
 
+public class IndexerCheckerTest {
+    static IndexerCheckerApp app = new IndexerCheckerApp();
+
+    /**
+     *  Setup method to populate the index with ten users - necessary to match the non-empty test needed for production
+     */
     @Before
     public void populateIndex() throws InterruptedException {
         PassClient passClient = PassClientFactory.getPassClient();
@@ -54,7 +54,7 @@ public class IndexerCheckerIT {
             List<User.Role> roles = new ArrayList<>();
             roles.add(User.Role.SUBMITTER);
             testUser.setRoles(roles);
-            URI userUri = passClient.createResource(testUser);
+            passClient.createResource(testUser);
         }
 
         sleep(10000);// give indexer a chance to pick up these ussrs - we populate the index so that we are not searching against an empty index

@@ -41,9 +41,6 @@ public class IndexerCheckerCli {
     @Option(name = "-v", aliases = { "-version", "--version" }, usage = "print version information")
     private boolean version = false;
 
-    @Option(name = "-e", aliases = { "-email", "--email" }, usage = "flag to use the internal email server for notification")
-    private static boolean email = false;
-
     @Argument
     private static List<String> arguments = new ArrayList<>();
 
@@ -65,14 +62,14 @@ public class IndexerCheckerCli {
                 System.err.println();
                 System.exit(0);
             } else if (application.version) {
-                System.err.println(PassCliException.class.getPackage()
+                System.err.println(IndexerCheckerApp.class.getPackage()
                         .getImplementationVersion());
                 System.exit(0);
             }
 
 
             /* Run the package generation application proper */
-           IndexerCheckerApp app = new IndexerCheckerApp(email);
+           IndexerCheckerApp app = new IndexerCheckerApp();
             app.run();
             System.exit((0));
         } catch (CmdLineException e) {
