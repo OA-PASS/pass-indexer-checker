@@ -43,16 +43,12 @@ import static org.junit.Assert.*;
 
 public class IndexerCheckerApp {
     private static final Logger LOG = LoggerFactory.getLogger(IndexerCheckerApp.class);
-    private final boolean email;
-    private EmailService emailService;
     private static final int RETRIES = 50;
 
     /**
      * Constructor for this class
-     * @param email - a boolean which indicates whether or not to send email notification of the result of the current run
      */
-    public IndexerCheckerApp(boolean email) {
-        this.email = email;
+    public IndexerCheckerApp() {
     }
 
     /**
@@ -62,16 +58,12 @@ public class IndexerCheckerApp {
      * @throws PassCliException if there was any error occurring during the grant loading or updating processes
      */
     public void run() throws PassCliException {
-        String mailPropertiesFileName = "mail.properties";
-        File mailPropertiesFile = new File(mailPropertiesFileName);
         String systemPropertiesFileName = "system.properties";
         File systemPropertiesFile = new File(systemPropertiesFileName);
 
         //let's be careful about overwriting system properties
         String[] systemProperties = {"pass.fedora.user", "pass.fedora.password", "pass.fedora.baseurl",
                 "pass.elasticsearch.url", "pass.elasticsearch.limit"};
-
-        Properties mailProperties;
 
         //add new system properties if we have any
         if (systemPropertiesFile.exists() && systemPropertiesFile.canRead()) {
@@ -81,19 +73,6 @@ public class IndexerCheckerApp {
                 if (value != null) {
                     System.setProperty(key, value);
                 }
-            }
-        }
-
-        //create mail properties and instantiate email service if we are using the service
-        if (email) {
-            if (!mailPropertiesFile.exists()) {
-                throw processException(format(IndexerCheckerErrors.ERR_REQUIRED_CONFIGURATION_FILE_MISSING, mailPropertiesFileName), null);
-            }
-            try {
-                mailProperties = loadProperties(mailPropertiesFile);
-                emailService = new EmailService(mailProperties);
-            } catch (RuntimeException e) {
-                throw processException(IndexerCheckerErrors.ERR_COULD_NOT_OPEN_CONFIGURATION_FILE, e);
             }
         }
 
@@ -266,19 +245,12 @@ public class IndexerCheckerApp {
      */
     private PassCliException processException (String message, Exception e){
         PassCliException clie;
-
-        String errorSubject = "Indexer Checker ERROR";
         if(e != null) {
             clie = new PassCliException(message, e);
             LOG.error(message, e);
-            e.printStackTrace();
-            if (email) {
-                emailService.sendEmailMessage(errorSubject, clie.getMessage());
-            }
         } else {
             clie = new PassCliException(message);
             LOG.error(message);
-            System.err.println(message);
         }
         return clie;
     }

@@ -225,7 +225,6 @@
         </plugins>
     </build>
 
-
     <dependencies>
         <dependency>
             <groupId>org.dataconservancy.pass</groupId>
