@@ -33,7 +33,7 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 
 
-public class IndexerCheckerTest {
+public class IndexerCheckerIT {
     static IndexerCheckerApp app = new IndexerCheckerApp();
 
     /**
@@ -57,7 +57,7 @@ public class IndexerCheckerTest {
             passClient.createResource(testUser);
         }
 
-        sleep(10000);// give indexer a chance to pick up these ussrs - we populate the index so that we are not searching against an empty index
+        sleep(10000);// give indexer a chance to pick up these users - we populate the index so that we are not searching against an empty index
     }
 
     /**
