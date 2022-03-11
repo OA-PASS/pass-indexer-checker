@@ -24,9 +24,10 @@ import org.dataconservancy.pass.model.User;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.Charset;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -55,7 +56,7 @@ public class IndexerCheckerApp {
      * The orchestration method for everything. This is called by the CLI which only manages the
      * command line interaction.
      *
-     * @throws PassCliException if there was any error occurring during the grant loading or updating processes
+     * @throws {@code PassCliException} if there was any error occurring during the grant loading or updating processes
      */
     public void run() throws PassCliException {
         String systemPropertiesFileName = "system.properties";
@@ -82,13 +83,8 @@ public class IndexerCheckerApp {
 
 
     private void runCheck() throws PassCliException {
-        try {
-            runConfigCheck();
-            LOG.info("indexer configuration passed");
-        } catch (IOException e) {
-            LOG.error("Error running configuration check" , e);
-            throw new PassCliException("Error running configuration check" , e);
-        }
+        runConfigCheck();
+        LOG.info("indexer configuration passed");
 
 
         PassClient passClient = PassClientFactory.getPassClient();
@@ -118,11 +114,16 @@ public class IndexerCheckerApp {
             assertNull(emptyUri);
             });
         }
-        assertNull(emptyUri);
+
+        if (emptyUri != null ) {
+            throw new PassCliException("Unable to delete test resource from Fedora from previous run of checker");
+        }
 
         //now create the user ...
         final URI returnedUri = passClient.createResource(testUser);
-        assertNotNull( returnedUri );
+        if (returnedUri == null ){
+            throw new PassCliException("Unable to create test resource.");
+        }
 
         // ... and wait for it to show up in the index, and find it
         attempt(RETRIES, () -> { // check the record exists before continuing
@@ -136,28 +137,38 @@ public class IndexerCheckerApp {
         // ... and wait for it to disappear from the index
         attempt(RETRIES, () -> { // check the record does not exist before continuing
             final URI uri = passClient.findByAttribute(User.class, "locatorIds", businessId);
-
             assertNull(uri);
         });
 
+        LOG.info("Index passes check.");
     }
 
-    private void runConfigCheck() throws IOException {
-        URL url = new URL(System.getProperty("pass.elasticsearch.url")+"/pass");
-        LOG.info("Checking index configuration at "  + url);
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setRequestMethod("GET");
-        urlConnection.setRequestProperty("Content-Type", "application/json");
-
-        BufferedReader bufferedReader = new BufferedReader(
-                new InputStreamReader(urlConnection.getInputStream(), Charset.forName("UTF-8")));
-        String inputLine;
-        StringBuffer content = new StringBuffer();
-        while ((inputLine = bufferedReader.readLine()) != null) {
-            content.append(inputLine);
+    private void runConfigCheck() throws PassCliException {
+        URL url = null;
+        try {
+            url = new URL(System.getProperty("pass.elasticsearch.url")+"/pass");
+        } catch (MalformedURLException e) {
+            throw new PassCliException("PASS index URL is malformed", e);
         }
-        bufferedReader.close();
-        urlConnection.disconnect();
+        LOG.info("Checking index configuration at "  + url);
+        StringBuffer content = new StringBuffer();
+
+        try {
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8));
+            String inputLine;
+            while ((inputLine = bufferedReader.readLine()) != null) {
+                content.append(inputLine);
+            }
+            bufferedReader.close();
+            urlConnection.disconnect();
+        } catch (IOException e) {
+            throw new PassCliException ("Error connecting to PASS index", e);
+        }
 
         String jsonString = content.toString();
 
@@ -167,7 +178,9 @@ public class IndexerCheckerApp {
                 .getJsonObject("mappings")
                         .getJsonObject("_doc")
                                 .getJsonObject("properties");
-        assertTrue(properties.entrySet().size() > 10); //should be 80 or more
+        if (properties == null || properties.entrySet().size() < 10) {
+            throw new PassCliException("Index appears to have too few objects in it", null);
+        }
     }
 
     /**
@@ -216,7 +229,7 @@ public class IndexerCheckerApp {
      * This method processes a plain text properties file and returns a {@code Properties} object
      * @param propertiesFile - the properties {@code File} to be read
      * @return the Properties object derived from the supplied {@code File}
-     * @throws PassCliException if the properties file could not be accessed.
+     * @throws  {@code PassCliException} if the properties file could not be accessed.
      */
     private Properties loadProperties(File propertiesFile) throws PassCliException {
         Properties properties = new Properties();
@@ -236,9 +249,7 @@ public class IndexerCheckerApp {
 
 
     /**
-     * This method logs the supplied message and exception, reports the {@code Exception} to STDOUT, and
-     * optionally causes an email regarding this {@code Exception} to be sent to the address configured
-     * in the mail properties file
+     * This method logs the supplied message and exception
      * @param message - the error message
      * @param e - the Exception
      * @return = the {@code PassCliException} wrapper
