@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.json.*;
 
-import static java.lang.String.format;
 import static org.junit.Assert.*;
 
 public class IndexerCheckerApp {
