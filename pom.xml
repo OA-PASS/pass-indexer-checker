@@ -7,7 +7,7 @@
     <groupId>org.dataconservancy.pass</groupId>
     <artifactId>pass-indexer-checker</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <name>PASS indexer Checker</name>
     <description>Utility for verifying the health of the PASS Repository Indexer</description>
