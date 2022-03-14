@@ -23,11 +23,14 @@ import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IndexerCheckerCli {
+
 
     /*
      * General Options
@@ -82,8 +85,10 @@ public class IndexerCheckerCli {
             System.err.println();
             System.exit(1);
         } catch (PassCliException e) {
+            Logger LOG = LoggerFactory.getLogger(IndexerCheckerCli.class);
             e.printStackTrace();
             System.err.println(e.getMessage());
+            LOG.error(e.getMessage(),e);
             System.exit(1);
         }
     }
