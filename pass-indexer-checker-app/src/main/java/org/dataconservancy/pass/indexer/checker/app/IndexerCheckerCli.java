@@ -53,7 +53,7 @@ public class IndexerCheckerCli {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        Logger LOG = LoggerFactory.getLogger(IndexerCheckerCli.class);
         final IndexerCheckerCli application = new IndexerCheckerCli();
         CmdLineParser parser = new CmdLineParser(application);
 
@@ -85,7 +85,6 @@ public class IndexerCheckerCli {
             System.err.println();
             System.exit(1);
         } catch (PassCliException e) {
-            Logger LOG = LoggerFactory.getLogger(IndexerCheckerCli.class);
             e.printStackTrace();
             System.err.println(e.getMessage());
             LOG.error(e.getMessage(),e);
