@@ -19,6 +19,11 @@
 
 package org.dataconservancy.pass.indexer.checker.integration;
 
+import static java.lang.Thread.sleep;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dataconservancy.pass.client.PassClient;
 import org.dataconservancy.pass.client.PassClientFactory;
 import org.dataconservancy.pass.indexer.checker.app.IndexerCheckerApp;
@@ -27,23 +32,18 @@ import org.dataconservancy.pass.model.User;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.lang.Thread.sleep;
-
 
 public class IndexerCheckerIT {
     static IndexerCheckerApp app = new IndexerCheckerApp();
 
     /**
-     *  Setup method to populate the index with ten users - necessary to match the non-empty test needed for production
+     * Setup method to populate the index with ten users - necessary to match the non-empty test needed for production
      */
     @Before
     public void populateIndex() throws InterruptedException {
         PassClient passClient = PassClientFactory.getPassClient();
 
-        for( int i =1; i<=10; i++) {
+        for (int i = 1; i <= 10; i++) {
             User testUser = new User();
             testUser.setFirstName("BeSsIe");
             testUser.setLastName("MoOcOw");
@@ -57,11 +57,13 @@ public class IndexerCheckerIT {
             passClient.createResource(testUser);
         }
 
-        sleep(10000);// give indexer a chance to pick up these users - we populate the index so that we are not searching against an empty index
+        sleep(
+            10000);// give indexer a chance to pick up these users - we populate the index so that we are not
+        // searching against an empty index
     }
 
     /**
-     *  The integration test
+     * The integration test
      */
     @Test
     public void CheckIndexerIT() {

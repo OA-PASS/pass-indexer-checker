@@ -18,11 +18,17 @@
  */
 package org.dataconservancy.pass.indexer.checker.app;
 
-import org.dataconservancy.pass.client.PassClient;
-import org.dataconservancy.pass.client.PassClientFactory;
-import org.dataconservancy.pass.model.User;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -33,13 +39,15 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 
+import org.dataconservancy.pass.client.PassClient;
+import org.dataconservancy.pass.client.PassClientFactory;
+import org.dataconservancy.pass.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.json.*;
-
-import static org.junit.Assert.*;
 
 public class IndexerCheckerApp {
     private static final Logger LOG = LoggerFactory.getLogger(IndexerCheckerApp.class);
@@ -63,7 +71,7 @@ public class IndexerCheckerApp {
 
         //let's be careful about overwriting system properties
         String[] systemProperties = {"pass.fedora.user", "pass.fedora.password", "pass.fedora.baseurl",
-                "pass.elasticsearch.url", "pass.elasticsearch.limit"};
+                                     "pass.elasticsearch.url", "pass.elasticsearch.limit"};
 
         //add new system properties if we have any
         if (systemPropertiesFile.exists() && systemPropertiesFile.canRead()) {
@@ -80,18 +88,16 @@ public class IndexerCheckerApp {
         runCheck();
     }
 
-
     private void runCheck() throws PassCliException {
         runConfigCheck();
         LOG.info("indexer configuration passed");
-
 
         PassClient passClient = PassClientFactory.getPassClient();
 
         //check that there are at least ten users with Role = SUBMITTER
         //this is basically a test for a non-empty index
         Set<URI> submitters = passClient.findAllByAttribute(User.class, "roles", User.Role.SUBMITTER);
-        assertTrue(submitters.size() >=10);
+        assertTrue(submitters.size() >= 10);
 
         User testUser = new User();
         testUser.setFirstName("BeSsIe");
@@ -104,23 +110,23 @@ public class IndexerCheckerApp {
         //this user should not be in the index
         URI emptyUri = passClient.findByAttribute(User.class, "locatorIds", businessId);
         //but if it is, it is due to a previous failed run, so let's fix that
-        if (emptyUri != null ) {
-            passClient.deleteResource( emptyUri );
+        if (emptyUri != null) {
+            passClient.deleteResource(emptyUri);
 
             // ... and wait for it to disappear from the index
             attempt(RETRIES, () -> { // check the record does not exist before continuing
-                        final URI uri = passClient.findByAttribute(User.class, "locatorIds", businessId);
-            assertNull(emptyUri);
+                final URI uri = passClient.findByAttribute(User.class, "locatorIds", businessId);
+                assertNull(emptyUri);
             });
         }
 
-        if (emptyUri != null ) {
+        if (emptyUri != null) {
             throw new PassCliException("Unable to delete test resource from Fedora from previous run of checker");
         }
 
         //now create the user ...
         final URI returnedUri = passClient.createResource(testUser);
-        if (returnedUri == null ){
+        if (returnedUri == null) {
             throw new PassCliException("Unable to create test resource.");
         }
 
@@ -131,7 +137,7 @@ public class IndexerCheckerApp {
         });
 
         // once found, delete the user ...
-        passClient.deleteResource( returnedUri );
+        passClient.deleteResource(returnedUri);
 
         // ... and wait for it to disappear from the index
         attempt(RETRIES, () -> { // check the record does not exist before continuing
@@ -145,11 +151,11 @@ public class IndexerCheckerApp {
     private void runConfigCheck() throws PassCliException {
         URL url = null;
         try {
-            url = new URL(System.getProperty("pass.elasticsearch.url")+"/pass");
+            url = new URL(System.getProperty("pass.elasticsearch.url") + "/pass");
         } catch (MalformedURLException e) {
             throw new PassCliException("PASS index URL is malformed", e);
         }
-        LOG.info("Checking index configuration at "  + url);
+        LOG.info("Checking index configuration at " + url);
         StringBuffer content = new StringBuffer();
 
         try {
@@ -158,7 +164,7 @@ public class IndexerCheckerApp {
             urlConnection.setRequestProperty("Content-Type", "application/json");
 
             BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8));
+                new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8));
             String inputLine;
             while ((inputLine = bufferedReader.readLine()) != null) {
                 content.append(inputLine);
@@ -166,7 +172,7 @@ public class IndexerCheckerApp {
             bufferedReader.close();
             urlConnection.disconnect();
         } catch (IOException e) {
-            throw new PassCliException ("Error connecting to PASS index", e);
+            throw new PassCliException("Error connecting to PASS index", e);
         }
 
         String jsonString = content.toString();
@@ -174,9 +180,9 @@ public class IndexerCheckerApp {
         JsonReader jsonReader = Json.createReader(new StringReader(jsonString));
         JsonObject passJsonObject = jsonReader.readObject();
         JsonObject properties = passJsonObject.getJsonObject("pass")
-                .getJsonObject("mappings")
-                        .getJsonObject("_doc")
-                                .getJsonObject("properties");
+                                              .getJsonObject("mappings")
+                                              .getJsonObject("_doc")
+                                              .getJsonObject("properties");
         if (properties == null || properties.entrySet().size() < 10) {
             throw new PassCliException("Index appears to have too few objects in it", null);
         }
@@ -185,7 +191,7 @@ public class IndexerCheckerApp {
     /**
      * Try invoking a runnable until it succeeds.
      *
-     * @param times The number of times to run
+     * @param times  The number of times to run
      * @param thingy The runnable.
      */
     void attempt(final int times, final Runnable thingy) {
@@ -199,7 +205,7 @@ public class IndexerCheckerApp {
      * Try invoking a callable until it succeeds.
      *
      * @param times Number of times to try
-     * @param it the thing to call.
+     * @param it    the thing to call.
      * @return the result from the callable, when successful.
      */
     <T> T attempt(final int times, final Callable<T> it) {
@@ -223,39 +229,39 @@ public class IndexerCheckerApp {
         throw new RuntimeException("Failed executing task", caught);
     }
 
-
     /**
      * This method processes a plain text properties file and returns a {@code Properties} object
+     *
      * @param propertiesFile - the properties {@code File} to be read
      * @return the Properties object derived from the supplied {@code File}
-     * @throws  {@code PassCliException} if the properties file could not be accessed.
+     * @throws {@code PassCliException} if the properties file could not be accessed.
      */
     private Properties loadProperties(File propertiesFile) throws PassCliException {
         Properties properties = new Properties();
         String resource;
-        try{
+        try {
             resource = propertiesFile.getCanonicalPath();
         } catch (IOException e) {
-            throw processException(IndexerCheckerErrors.ERR_COULD_NOT_OPEN_CONFIGURATION_FILE, e);
+            throw processException("Could not open configuration file", e);
         }
-        try(InputStream resourceStream = new FileInputStream(resource)){
+        try (InputStream resourceStream = new FileInputStream(resource)) {
             properties.load(resourceStream);
         } catch (IOException e) {
-            throw processException(IndexerCheckerErrors.ERR_COULD_NOT_OPEN_CONFIGURATION_FILE, e);
+            throw processException("Could not open configuration file", e);
         }
         return properties;
     }
 
-
     /**
      * This method logs the supplied message and exception
+     *
      * @param message - the error message
-     * @param e - the Exception
+     * @param e       - the Exception
      * @return = the {@code PassCliException} wrapper
      */
-    private PassCliException processException (String message, Exception e){
+    private PassCliException processException(String message, Exception e) {
         PassCliException clie;
-        if(e != null) {
+        if (e != null) {
             clie = new PassCliException(message, e);
             LOG.error(message, e);
         } else {

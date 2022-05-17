@@ -19,6 +19,9 @@
 
 package org.dataconservancy.pass.indexer.checker.app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -26,22 +29,22 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class IndexerCheckerCli {
-
 
     /*
      * General Options
      */
 
-    /** Request for help/usage documentation */
-    @Option(name = "-h", aliases = { "-help", "--help" }, usage = "print help message")
+    /**
+     * Request for help/usage documentation
+     */
+    @Option(name = "-h", aliases = {"-help", "--help"}, usage = "print help message")
     private boolean help = false;
 
-    /** Requests the current version number of the cli application. */
-    @Option(name = "-v", aliases = { "-version", "--version" }, usage = "print version information")
+    /**
+     * Requests the current version number of the cli application.
+     */
+    @Option(name = "-v", aliases = {"-version", "--version"}, usage = "print version information")
     private boolean version = false;
 
     @Argument
@@ -50,6 +53,7 @@ public class IndexerCheckerCli {
     /**
      * The main method which parses the command line arguments and options; also reports errors and exit statuses
      * when the {@code IndexerCheckerApp} executes
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -66,13 +70,12 @@ public class IndexerCheckerCli {
                 System.exit(0);
             } else if (application.version) {
                 System.err.println(IndexerCheckerApp.class.getPackage()
-                        .getImplementationVersion());
+                                                          .getImplementationVersion());
                 System.exit(0);
             }
 
-
             /* Run the package generation application proper */
-           IndexerCheckerApp app = new IndexerCheckerApp();
+            IndexerCheckerApp app = new IndexerCheckerApp();
             app.run();
             System.exit((0));
         } catch (CmdLineException e) {
@@ -87,7 +90,7 @@ public class IndexerCheckerCli {
         } catch (PassCliException e) {
             e.printStackTrace();
             System.err.println(e.getMessage());
-            LOG.error(e.getMessage(),e);
+            LOG.error(e.getMessage(), e);
             System.exit(1);
         }
     }

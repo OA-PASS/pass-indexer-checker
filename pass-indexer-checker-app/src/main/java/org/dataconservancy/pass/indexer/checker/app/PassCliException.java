@@ -18,18 +18,19 @@
  */
 package org.dataconservancy.pass.indexer.checker.app;
 
-    /**
-     * An Exception class to manage the various Exceptions thrown to the {@code IndexerCheckerApp}, which then forwards this single exception
-     * type to the CLI
-     */
-    public class PassCliException extends Exception {
-        private static final long serialVersionUID = 1L;
+/**
+ * An Exception class to manage the various Exceptions thrown to the {@code IndexerCheckerApp}, which then
+ * forwards this single exception
+ * type to the CLI
+ */
+public class PassCliException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-        PassCliException(String message) {
-            super(message);
-        }
+    PassCliException(String message) {
+        super(message);
+    }
 
-        PassCliException(String message, Throwable cause) {
-            super(message, cause);
-        }
+    PassCliException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -19,19 +19,19 @@
 
 <configuration>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>indexer-checker.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>
-                %d{HH:mm:ss.SSS} [%10.30thread] %-5level [%15.-30C{0}] - %msg%n
-            </pattern>
-        </encoder>
-    </appender>
-    <root level="INFO">
-        <appender-ref ref="FILE"/>
-    </root>
-    <logger name="org.dataconservancy.pass" additivity="false">
-        <appender-ref ref="FILE"/>
-    </logger>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>indexer-checker.log</file>
+    <append>true</append>
+    <encoder>
+      <pattern>
+        %d{HH:mm:ss.SSS} [%10.30thread] %-5level [%15.-30C{0}] - %msg%n
+      </pattern>
+    </encoder>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="FILE"/>
+  </root>
+  <logger name="org.dataconservancy.pass" additivity="false">
+    <appender-ref ref="FILE"/>
+  </logger>
 </configuration>

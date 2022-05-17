@@ -1,4 +1,3 @@
-
 <!--
   ~
   ~ Copyright 2022 The Johns Hopkins University
@@ -19,21 +18,21 @@
   -->
 
 <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>
-                %d{HH:mm:ss.SSS} [%10.30thread] %-5level [%15.-30C{0}] - %msg%n
-            </pattern>
-        </encoder>
-    </appender>
-    <root level="INFO">
-        <appender-ref ref="STDOUT"/>
-    </root>
-    <logger name="org.dataconservancy.pass" additivity="false">
-        <appender-ref ref="STDOUT"/>
-    </logger>
-    <logger name="org.fcrepo" additivity="false" level="${fcrepo.log:-INFO}">
-        <appender-ref ref="STDOUT" />
-    </logger>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>
+        %d{HH:mm:ss.SSS} [%10.30thread] %-5level [%15.-30C{0}] - %msg%n
+      </pattern>
+    </encoder>
+  </appender>
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+  <logger name="org.dataconservancy.pass" additivity="false">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+  <logger name="org.fcrepo" additivity="false" level="${fcrepo.log:-INFO}">
+    <appender-ref ref="STDOUT"/>
+  </logger>
 
 </configuration>
