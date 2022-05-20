@@ -32,12 +32,11 @@ import org.dataconservancy.pass.model.User;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class IndexerCheckerIT {
     static IndexerCheckerApp app = new IndexerCheckerApp();
 
     /**
-     * Setup method to populate the index with ten users - necessary to match the non-empty test needed for production
+     *  Setup method to populate the index with ten users - necessary to match the non-empty test needed for production
      */
     @Before
     public void populateIndex() throws InterruptedException {
@@ -57,13 +56,13 @@ public class IndexerCheckerIT {
             passClient.createResource(testUser);
         }
 
-        sleep(
-            10000);// give indexer a chance to pick up these users - we populate the index so that we are not
-        // searching against an empty index
+        // give indexer a chance to pick up these users
+        // we populate the index so that we are not searching against an empty index
+        sleep(10000);
     }
 
     /**
-     * The integration test
+     *  The integration test
      */
     @Test
     public void CheckIndexerIT() {
