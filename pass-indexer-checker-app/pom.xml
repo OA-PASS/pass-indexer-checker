@@ -24,7 +24,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>pass-indexer-checker</artifactId>
-    <groupId>org.dataconservancy.pass</groupId>
+    <groupId>org.eclipse.pass</groupId>
     <version>1.0.2-SNAPSHOT</version>
   </parent>
 
@@ -92,15 +92,15 @@
       <artifactId>junit</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-data-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-model</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.dataconservancy.pass</groupId>
+      <groupId>org.eclipse.pass</groupId>
       <artifactId>pass-client-api</artifactId>
     </dependency>
     <dependency>
