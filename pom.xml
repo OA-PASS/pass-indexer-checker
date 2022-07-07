@@ -7,17 +7,17 @@
   <parent>
     <groupId>org.eclipse.pass</groupId>
     <artifactId>eclipse-pass-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.eclipse.pass</groupId>
   <artifactId>pass-indexer-checker</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
 
   <name>PASS indexer Checker</name>
   <description>Utility for verifying the health of the PASS Repository Indexer</description>
-  <url>https://github.com/OA-PASS/pass-indexer-checker</url>
+  <url>https://github.com/eclipse-pass/pass-indexer-checker</url>
 
   <modules>
     <module>pass-indexer-checker-app</module>
