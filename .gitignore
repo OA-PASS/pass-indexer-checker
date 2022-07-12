@@ -6,3 +6,7 @@
 .classpath
 .settings/
 target/
+.vscode/
+
+# A maven-shade-plugin temp artifact
+dependency-reduced-pom.xml
