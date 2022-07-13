@@ -37,13 +37,17 @@
     <module>pass-indexer-checker-integration</module>
   </modules>
 
+  <scm>
+    <connection>scm:git:git://github.com/eclipse-pass/pass-indexer-checker.git</connection>
+    <developerConnection>scm:git:ssh://github.com:eclipse-pass/pass-indexer-checker.git</developerConnection>
+    <url>http://github.com/eclipse-pass/pass-indexer-checker/tree/main</url>
+    <tag>HEAD</tag>
+  </scm>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <pass.client.version>0.1.0-SNAPSHOT</pass.client.version>
-    <pass.client.api.version>0.1.0-SNAPSHOT</pass.client.api.version>
-    <pass.model.version>0.9.0-SNAPSHOT</pass.model.version>
     <args4j.version>2.33</args4j.version>
     <slf4j.api.version>1.7.36</slf4j.api.version>
     <logback.version>1.2.11</logback.version>
@@ -57,17 +61,17 @@
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-data-client</artifactId>
-        <version>${pass.client.version}</version>
+        <version>${pass-java-client.version}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-model</artifactId>
-        <version>${pass.model.version}</version>
+        <version>${pass-java-client.version}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-client-api</artifactId>
-        <version>${pass.client.api.version}</version>
+        <version>${pass-java-client.version}</version>
       </dependency>
       <dependency>
         <groupId>args4j</groupId>
