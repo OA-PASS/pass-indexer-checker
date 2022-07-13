@@ -18,13 +18,12 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <artifactId>pass-indexer-checker</artifactId>
     <groupId>org.eclipse.pass</groupId>
+    <artifactId>pass-indexer-checker</artifactId>
     <version>0.1.0-SNAPSHOT</version>
   </parent>
 
@@ -37,24 +36,13 @@
     <ES_HOST>localhost</ES_HOST>
   </properties>
 
-  <profiles>
-    <profile>
-      <id>standard</id>
-      <properties>
-        <FCREPO_PORT>8080</FCREPO_PORT>
-        <FCREPO_JMX_PORT>1099</FCREPO_JMX_PORT>
-        <FCREPO_JMS_PORT>61616</FCREPO_JMS_PORT>
-        <FCREPO_STOMP_PORT>61613</FCREPO_STOMP_PORT>
-        <ES_PORT>9200</ES_PORT>
-      </properties>
-    </profile>
-    <profile>
-      <id>local-context</id>
-      <properties>
-        <COMPACTION_PRELOAD_FILE_PASS_STATIC>/mnt/context.jsonld</COMPACTION_PRELOAD_FILE_PASS_STATIC>
-      </properties>
-    </profile>
-  </profiles>
+  <dependencies>
+    <dependency>
+      <groupId>org.eclipse.pass</groupId>
+      <artifactId>pass-indexer-checker-app</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -228,11 +216,22 @@
     </plugins>
   </build>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.eclipse.pass</groupId>
-      <artifactId>pass-indexer-checker-app</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
-  </dependencies>
+  <profiles>
+    <profile>
+      <id>standard</id>
+      <properties>
+        <FCREPO_PORT>8080</FCREPO_PORT>
+        <FCREPO_JMX_PORT>1099</FCREPO_JMX_PORT>
+        <FCREPO_JMS_PORT>61616</FCREPO_JMS_PORT>
+        <FCREPO_STOMP_PORT>61613</FCREPO_STOMP_PORT>
+        <ES_PORT>9200</ES_PORT>
+      </properties>
+    </profile>
+    <profile>
+      <id>local-context</id>
+      <properties>
+        <COMPACTION_PRELOAD_FILE_PASS_STATIC>/mnt/context.jsonld</COMPACTION_PRELOAD_FILE_PASS_STATIC>
+      </properties>
+    </profile>
+  </profiles>
 </project>
