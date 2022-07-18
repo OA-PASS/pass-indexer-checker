@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.eclipse.pass</groupId>
     <artifactId>pass-indexer-checker</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
 
   <artifactId>pass-indexer-checker-app</artifactId>

@@ -10,7 +10,7 @@
 
   <groupId>org.eclipse.pass</groupId>
   <artifactId>pass-indexer-checker</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>pom</packaging>
 
   <name>PASS indexer Checker</name>
@@ -41,7 +41,7 @@
     <connection>scm:git:git://github.com/eclipse-pass/pass-indexer-checker.git</connection>
     <developerConnection>scm:git:ssh://github.com:eclipse-pass/pass-indexer-checker.git</developerConnection>
     <url>http://github.com/eclipse-pass/pass-indexer-checker/tree/main</url>
-    <tag>HEAD</tag>
+    <tag>0.1.0</tag>
   </scm>
 
   <properties>
@@ -59,17 +59,17 @@
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-data-client</artifactId>
-        <version>${pass-java-client.version}</version>
+        <version>0.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-model</artifactId>
-        <version>${pass-java-client.version}</version>
+        <version>0.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.pass</groupId>
         <artifactId>pass-client-api</artifactId>
-        <version>${pass-java-client.version}</version>
+        <version>0.1.0</version>
       </dependency>
       <dependency>
         <groupId>args4j</groupId>
