@@ -63,7 +63,7 @@ public class IndexerCheckerApp {
      * The orchestration method for everything. This is called by the CLI which only manages the
      * command line interaction.
      *
-     * @throws {@code PassCliException} if there was any error occurring during the grant loading or updating processes
+     * @throws PassCliException if there was any error occurring during the grant loading or updating processes
      */
     public void run() throws PassCliException {
         String systemPropertiesFileName = "system.properties";
