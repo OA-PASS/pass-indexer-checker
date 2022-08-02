@@ -77,7 +77,7 @@
           <images>
             <image>
               <alias>fcrepo</alias>
-              <name>oapass/fcrepo:4.7.5-3.5-1</name>
+              <name>${it.image.fcrepo.name}</name>
               <run>
                 <hostname>fcrepo</hostname>
                 <namingStrategy>alias</namingStrategy>
@@ -88,12 +88,12 @@
                   <FCREPO_STOMP_PORT>${FCREPO_STOMP_PORT}</FCREPO_STOMP_PORT>
                   <FCREPO_JMS_BASEURL>http://${FCREPO_HOST}:${FCREPO_PORT}/fcrepo/rest</FCREPO_JMS_BASEURL>
                   <FCREPO_ACTIVEMQ_CONFIGURATION>classpath:/activemq-queue.xml</FCREPO_ACTIVEMQ_CONFIGURATION>
-                  <COMPACTION_URI>https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.1.jsonld
+                  <COMPACTION_URI>https://eclipse-pass.github.io/pass-data-model/src/main/resources/context-3.5.jsonld
                   </COMPACTION_URI>
                   <COMPACTION_PRELOAD_URI_PASS_STATIC>
-                    https://oa-pass.github.io/pass-data-model/src/main/resources/context-3.1.jsonld
+                    https://eclipse-pass.github.io/pass-data-model/src/main/resources/context-3.5.jsonld
                   </COMPACTION_PRELOAD_URI_PASS_STATIC>
-                  <COMPACTION_PRELOAD_FILE_PASS_STATIC>/usr/local/tomcat/lib/context-3.1.jsonld
+                  <COMPACTION_PRELOAD_FILE_PASS_STATIC>/usr/local/tomcat/lib/context-3.5.jsonld
                   </COMPACTION_PRELOAD_FILE_PASS_STATIC>
                 </env>
                 <ports>
@@ -118,7 +118,7 @@
             </image>
             <image>
               <alias>indexer</alias>
-              <name>oapass/indexer:0.0.18-3.4-1</name>
+              <name>${it.image.indexer.name}</name>
               <run>
                 <namingStrategy>alias</namingStrategy>
                 <env>
@@ -149,7 +149,7 @@
 
             <image>
               <alias>elasticsearch</alias>
-              <name>docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.3</name>
+              <name>${it.image.elasticsearch.name}</name>
               <run>
                 <namingStrategy>alias</namingStrategy>
                 <env>
